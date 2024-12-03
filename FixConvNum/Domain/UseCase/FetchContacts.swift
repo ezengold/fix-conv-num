@@ -29,7 +29,7 @@ struct FetchContactsUseCase: FetchContacts {
 			] as [CNKeyDescriptor]
 			
 			try store.enumerateContacts(with: CNContactFetchRequest(keysToFetch: keys)) { _contact, stop in
-				if _contact.canBeDisplayed() {
+				if !UserDefaults.hasInTrash(aContactOfId: _contact.identifier) && _contact.canBeDisplayed() {
 					contacts.append(_contact)
 				}
 			}

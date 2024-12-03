@@ -14,21 +14,8 @@ protocol RemoveContact {
 
 struct RemoveContactUseCase: RemoveContact {
 	
-	var store: CNContactStore
-	
 	func execute(forContact contact: CNContact) -> Bool {
-		do {
-			guard let mutableContact = contact.mutableCopy() as? CNMutableContact else { return false }
-			
-			let saveRequest = CNSaveRequest()
-			
-			saveRequest.delete(mutableContact)
-
-			try store.execute(saveRequest)
-
-			return true
-		} catch {
-			return false
-		}
+		UserDefaults.addToTrash(contactId: contact.identifier)
+		return true
 	}
 }

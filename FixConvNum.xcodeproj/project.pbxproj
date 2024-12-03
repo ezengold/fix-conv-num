@@ -272,7 +272,7 @@
 				INFOPLIST_FILE = FixConvNum/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = FixConvNum;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSContactsUsageDescription = "Please let FixConvNum access your contacts for better usage experience";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Permettez à FixConvNum d'accéder à vos contacts pour une meilleure expérience";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -312,7 +312,7 @@
 				INFOPLIST_FILE = FixConvNum/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = FixConvNum;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSContactsUsageDescription = "Please let FixConvNum access your contacts for better usage experience";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Permettez à FixConvNum d'accéder à vos contacts pour une meilleure expérience";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

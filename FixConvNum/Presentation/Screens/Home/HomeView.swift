@@ -16,6 +16,8 @@ struct HomeView: View {
 	@State var isDeleting: Bool = false
 	
 	@State var tempContact: CNContact?
+
+	@State var isPresentingInfos: Bool = false
 	
 	var body: some View {
 		VStack(spacing: 0) {
@@ -37,11 +39,11 @@ struct HomeView: View {
 					ForEach(Array(vm.displayed.enumerated()), id: \.0) { _, item in
 						ContactCard(contact: .constant(item))
 							.swipeActions(edge: .leading, allowsFullSwipe: false) {
-								Button("Supprimer", systemImage: "trash.fill") {
+								Button("Ignorer", systemImage: "archivebox") {
 									isDeleting = true
 									tempContact = item
 								}
-								.tint(Color.appRed)
+								.tint(Color(UIColor.systemOrange))
 							}
 							.swipeActions(edge: .trailing) {
 								if item.hasIssue() {
@@ -106,6 +108,22 @@ struct HomeView: View {
 			vm.fetchAllData()
 		}
 		.navigationTitle("Mes contacts")
+		.navigationBarItems(trailing: HStack {
+			Button("Infos", systemImage: "info.circle", role: .none) {
+				isPresentingInfos.toggle()
+			}
+			Button("Settings", systemImage: "person.crop.circle.fill.badge.plus", role: .none) {
+				guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else { return }
+				
+				if UIApplication.shared.canOpenURL(settingsUrl) {
+					UIApplication.shared.open(settingsUrl)
+				}
+			}
+		})
+		.sheet(isPresented: $isPresentingInfos) {
+			InfosView()
+				.presentationDetents([.medium, .large])
+		}
 		.searchable(text: $vm.keywords, prompt: Text("Rechercher un nom ou prénom"))
 		.alert("", isPresented: $vm.isAlertPresented) {
 			Button("OK", role: .cancel) { }
@@ -122,7 +140,7 @@ struct HomeView: View {
 				tempContact = nil
 			}
 		} message: {
-			Text("Êtes-vous sûr de vouloir supprimer ce contact ? Cette action est irréversible !")
+			Text("Êtes-vous sûr de vouloir ignorer ce contact ? Cette action est irréversible !")
 		}
 	}
 }

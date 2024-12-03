@@ -33,7 +33,7 @@ class HomeViewModel: ObservableObject {
 	
 	var fixOneContactUseCase = FixOneContactUseCase(store: ContactStore)
 	
-	var removeOneContactUseCase = RemoveContactUseCase(store: ContactStore)
+	var removeOneContactUseCase = RemoveContactUseCase()
 	
 	@Published var isFetching: Bool = true
 	
@@ -182,13 +182,13 @@ class HomeViewModel: ObservableObject {
 				
 				DispatchQueue.main.async {
 					self.isLoading = false
-					self.alertMessage = "Le contact \(contact.givenName) \(contact.familyName) a été supprimé ✅"
+					self.alertMessage = "Le contact \(contact.givenName) \(contact.familyName) a été retiré ✅"
 					self.isAlertPresented = true
 				}
 			} else {
 				DispatchQueue.main.async {
 					self.isLoading = false
-					self.alertMessage = "Une erreur est survenue lors de la suppression du contact \(contact.givenName) \(contact.familyName) ❌"
+					self.alertMessage = "Une erreur est survenue lors du retrait du contact \(contact.givenName) \(contact.familyName) ❌"
 					self.isAlertPresented = true
 				}
 			}
