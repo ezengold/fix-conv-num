@@ -11,5 +11,4 @@ Clone and enjoy 😄 🚀
 
 - Add ignore action in cell swipe left
 
-
-![Cover](https://github.com/user-attachments/assets/ae42ee2b-e737-46f6-96f4-b067ecbbff74)
+![Cover](https://github.com/user-attachments/assets/91163509-60a9-4acc-8314-872a1c6cf777)
