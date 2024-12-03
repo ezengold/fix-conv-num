@@ -61,9 +61,9 @@ struct InfosView: View {
 				Group {
 					Text("Les contacts affichés suivant le format ci-dessus ont tous leurs numéros") +
 					Text(" béninois ").foregroundColor(colorScheme == .dark ? Color(UIColor.green) : Color.appPrincipal).font(.system(size: 15, weight: .bold)) +
-					Text("déjà migrés et contiennent aussi le format non migré pour permettre aux réseaux comme") +
+					Text("déjà migrés et contiennent aussi le format non migré pour permettre aux applications sociales comme") +
 					Text(" **WhatsApp** ").foregroundColor(colorScheme == .dark ? Color(UIColor.green) : Color.appPrincipal).font(.system(size: 15, weight: .bold)) +
-					Text("sociaux de les identifier.")
+					Text("de les identifier.")
 				}
 				.font(.system(size: 15, weight: .regular))
 				.lineSpacing(9)
@@ -86,7 +86,7 @@ struct InfosView: View {
 						.stroke(Color.appText.opacity(colorScheme == .dark ? 0.1 : 0.07), lineWidth: 1)
 				)
 				.clipped()
-				Text("Vous pouvez ignorez certains contacts en les glissant vers la droite. Ces derniers seront retirés de l'application mais de votre répertoire. Ils ne seront par conséquent pas altérés.")
+				Text("Vous pouvez ignorer certains contacts en les glissant vers la droite. Ces derniers seront retirés de l'application mais pas de votre répertoire téléphonique. Ils ne seront par conséquent pas altérés.")
 					.font(.system(size: 15, weight: .regular))
 					.lineSpacing(9)
 					.padding(.top, 10)
@@ -102,7 +102,7 @@ struct InfosView: View {
 					Text("Les contacts affichés suivant le format ci-dessus se retrouvent dans le cas contraire. C'est-à-dire qu'ils") +
 					Text(" n'ont pas été migré ").foregroundColor(.red).font(.system(size: 15, weight: .bold)) +
 					Text(" ou que lors de la migration, ils ont été ") +
-					Text(" remplacer ").foregroundColor(.red).font(.system(size: 15, weight: .bold)) +
+					Text(" remplacés ").foregroundColor(.red).font(.system(size: 15, weight: .bold)) +
 					Text(" par le numéro étendu. Ils sont à l'origine des problèmes rencontrés dans l'application **WhatsApp** par exemple.")
 				}
 				.font(.system(size: 15, weight: .regular))
@@ -127,12 +127,12 @@ struct InfosView: View {
 						.stroke(Color.appText.opacity(colorScheme == .dark ? 0.1 : 0.07), lineWidth: 1)
 				)
 				.clipped()
-				Text("Vous pouvez aussi corriger un contact à la fois en le glissant vers la gauche")
+				Text("Vous pouvez aussi corriger un contact à la fois, en le glissant vers la gauche.")
 					.font(.system(size: 15, weight: .regular))
 					.lineSpacing(9)
 					.padding(.top, 10)
 				
-				Text("Si vous décider modifier les contacts auquels auront accès cette application, veuillez cliquer sur l'icône dans le coin droit comme présenté ci-dessous :")
+				Text("Si vous désirez modifier les contacts auquels auront accès cette application, veuillez cliquer sur l'icône dans le coin supérieur droit comme présenté ci-dessous :")
 					.font(.system(size: 15, weight: .regular))
 					.lineSpacing(9)
 					.padding(.top, 30)
@@ -147,6 +147,7 @@ struct InfosView: View {
 						Text("Mes contacts")
 							.font(.system(size: 30, weight: .bold))
 							.frame(maxWidth: .infinity, alignment: .leading)
+							.padding(.top, 15)
 					}
 					Image(systemName: "line.diagonal.arrow")
 						.resizable()
