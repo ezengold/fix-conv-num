@@ -54,7 +54,6 @@ struct HomeView: View {
 					}
 				}
 				.listStyle(.plain)
-				.padding(.bottom, 100)
 				.frame(maxHeight: .infinity)
 			}
 			
