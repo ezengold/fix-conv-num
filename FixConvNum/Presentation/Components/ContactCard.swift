@@ -11,47 +11,40 @@ import Contacts
 struct ContactCard: View {
 	@Binding var contact: CNContact
 	
-	@Binding var isSafe: Bool
+	@Environment(\.colorScheme) private var colorScheme
 	
 	var body: some View {
-		VStack(alignment: .leading, spacing: 5) {
-			HStack(spacing: 10) {
-				Text("\(contact.givenName) \(contact.familyName)")
-					.font(.system(size: 17, weight: .semibold))
-					.foregroundColor(.appPrincipal)
-					.frame(maxWidth: .infinity, alignment: .leading)
-				if !isSafe {
-					RoundedRectangle(cornerRadius: 10)
-						.fill(Color.red)
-						.frame(width: 10, height: 10)
-				}
+		HStack(spacing: 15) {
+			if contact.hasIssue() {
+				Image(systemName: "person.crop.circle.badge.exclamationmark")
+					.resizable()
+					.scaledToFit()
+					.frame(width: 50, height: 50)
+					.foregroundColor(Color.appRed)
+			} else {
+				Text(contact.shortName)
+					.font(.system(size: 18, weight: .semibold))
+					.foregroundColor(.appText)
+					.frame(width: 50, height: 50)
+					.background(Color.appText.opacity(colorScheme == .dark ? 0.08 : 0.04))
+					.cornerRadius(50 / 2)
+					.overlay(
+						RoundedRectangle(cornerRadius: 50/2, style: .circular)
+							.stroke(Color.appText.opacity(0.1), lineWidth: 1)
+					)
 			}
-			.padding(10)
-			.frame(maxWidth: .infinity)
-			.background(Color.appPrincipal.opacity(0.05))
-			.cornerRadius(5)
-			
-			ForEach(Array(contact.phoneNumbers.enumerated()), id: \.0) { key, item in
-				if key != 0 {
-					RoundedRectangle(cornerRadius: 2)
-						.fill(Color.appDarkGray.opacity(0.1))
-						.frame(height: 1)
-						.frame(maxWidth: .infinity)
-						.padding(.leading, 15)
-				}
-				Text(item.value.stringValue)
+			VStack(alignment: .leading, spacing: 5) {
+				Text("\(contact.givenName) **\(contact.familyName)**")
+					.font(.system(size: 17, weight: .regular))
+					.frame(maxWidth: .infinity, alignment: .leading)
+				Text(contact.phoneNumbers.map({ $0.value.stringValue }).joined(separator: ", "))
 					.font(.system(size: 15, weight: .regular))
-					.foregroundColor(.black)
-					.padding(5)
-					.padding(.leading, 10)
+					.foregroundColor(.appText)
+					.multilineTextAlignment(.leading)
+					.lineSpacing(2)
 					.frame(maxWidth: .infinity, alignment: .leading)
 			}
 		}
-		.padding(10)
-		.background(Color.white)
-		.cornerRadius(10)
-		.clipped()
-		.shadow(color: .gray.opacity(0.2), radius: 10, x: 0, y: 0)
 	}
 }
 
@@ -62,17 +55,13 @@ struct ContactCard: View {
 	contact.phoneNumbers = [
 		CNLabeledValue(
 			label: CNLabelPhoneNumberMobile,
-			value: CNPhoneNumber(stringValue: "+2290197979797")
+			value: CNPhoneNumber(stringValue: "+22997979797")
 		),
 		CNLabeledValue(
 			label: CNLabelPhoneNumberMobile,
-			value: CNPhoneNumber(stringValue: "+2290197979797")
-		),
-		CNLabeledValue(
-			label: CNLabelPhoneNumberMobile,
-			value: CNPhoneNumber(stringValue: "+2290197979797")
+			value: CNPhoneNumber(stringValue: "0197979798")
 		),
 	]
 	
-	return ContactCard(contact: .constant(contact), isSafe: .constant(false))
+	return ContactCard(contact: .constant(contact))
 }

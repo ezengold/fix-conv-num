@@ -26,6 +26,12 @@ extension Color {
 	static let appPrincipal: Color = Color("AccentColor")
 	
 	static let appDarkGray: Color = Color(red: 63/255, green: 63/255, blue: 63/255)
+	
+	static let appText: Color = Color(UIColor.label)
+	
+	static let appBackground: Color = Color(UIColor.systemBackground)
+	
+	static let appRed: Color = Color(UIColor.systemRed)
 }
 
 extension UIColor {
