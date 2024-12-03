@@ -12,6 +12,8 @@ struct Helpers {
 	
 	static let extendedPhoneRegex: String = "^(\\+229|00229)?(01){1}(40|41|42|43|44|45|46|47|50|51|52|53|54|55|56|57|58|59|60|61|62|63|64|65|66|67|68|69|90|91|92|93|94|95|96|97|98|99)\\d{6}$"
 	
+	static let hasViewedInfosKey: String = "hasViewedInfos"
+	
 	static func getMigratedContactIfNecessary(from contact: CNContact) -> CNMutableContact? {
 		guard let mutableContact = contact.mutableCopy() as? CNMutableContact else { return nil }
 		

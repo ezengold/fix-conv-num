@@ -17,6 +17,8 @@ struct HomeView: View {
 	
 	@State var tempContact: CNContact?
 
+	@AppStorage(Helpers.hasViewedInfosKey) var hasViewedInfos: Bool = false
+	
 	@State var isPresentingInfos: Bool = false
 	
 	var body: some View {
@@ -104,9 +106,6 @@ struct HomeView: View {
 			}
 			.padding(10)
 		}
-		.onAppear {
-			vm.fetchAllData()
-		}
 		.navigationTitle("Mes contacts")
 		.navigationBarItems(trailing: HStack {
 			Button("Infos", systemImage: "info.circle", role: .none) {
@@ -122,7 +121,6 @@ struct HomeView: View {
 		})
 		.sheet(isPresented: $isPresentingInfos) {
 			InfosView()
-				.presentationDetents([.medium, .large])
 		}
 		.searchable(text: $vm.keywords, prompt: Text("Rechercher un nom ou prénom"))
 		.alert("", isPresented: $vm.isAlertPresented) {
@@ -141,6 +139,11 @@ struct HomeView: View {
 			}
 		} message: {
 			Text("Êtes-vous sûr de vouloir ignorer ce contact ? Cette action est irréversible !")
+		}
+		.onAppear {
+			isPresentingInfos = !hasViewedInfos
+			
+			vm.fetchAllData()
 		}
 	}
 }

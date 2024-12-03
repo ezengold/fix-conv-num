@@ -11,6 +11,8 @@ import Contacts
 struct InfosView: View {
 	@Environment(\.colorScheme) private var colorScheme
 	
+	@AppStorage(Helpers.hasViewedInfosKey) var hasViewedInfos: Bool = false
+	
 	var correctContact: CNContact {
 		let _ctc = CNMutableContact()
 		_ctc.givenName = "Steve"
@@ -172,6 +174,9 @@ struct InfosView: View {
 			.frame(maxWidth: .infinity)
 			.padding(20)
 			.padding(.bottom, 100)
+			.onAppear {
+				hasViewedInfos = true
+			}
 		}
 	}
 }
