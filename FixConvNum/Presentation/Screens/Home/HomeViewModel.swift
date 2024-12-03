@@ -20,10 +20,20 @@ class HomeViewModel: ObservableObject {
 		}
 	}
 	
+	var issueExistsInList: Bool {
+		get {
+			self.data.contains(where: { $0.hasIssue() })
+		}
+	}
+	
 	// MARK: Use cases
 	var fetchContactsUseCase = FetchContactsUseCase(store: ContactStore)
 	
 	var updateContactsUseCase = UpdateContactsUseCase(store: ContactStore)
+	
+	var fixOneContactUseCase = FixOneContactUseCase(store: ContactStore)
+	
+	var removeOneContactUseCase = RemoveContactUseCase(store: ContactStore)
 	
 	@Published var isFetching: Bool = true
 	
@@ -113,7 +123,7 @@ class HomeViewModel: ObservableObject {
 		}
 	}
 	
-	func fixNumbers() {
+	func fixAllContacts() {
 		DispatchQueue.main.async {
 			self.isLoading = true
 		}
@@ -131,6 +141,54 @@ class HomeViewModel: ObservableObject {
 				DispatchQueue.main.async {
 					self.isLoading = false
 					self.alertMessage = "Une erreur est survenue lors de la correction des contacts ❌"
+					self.isAlertPresented = true
+				}
+			}
+		}
+	}
+	
+	func fixContact(_ contact: CNContact) {
+		DispatchQueue.main.async {
+			self.isLoading = true
+		}
+		
+		Task {
+			if await fixOneContactUseCase.execute(forContact: contact) {
+				self.fetchAllData()
+				
+				DispatchQueue.main.async {
+					self.isLoading = false
+					self.alertMessage = "Les numeros de \(contact.givenName) \(contact.familyName) ont été corrigés ✅"
+					self.isAlertPresented = true
+				}
+			} else {
+				DispatchQueue.main.async {
+					self.isLoading = false
+					self.alertMessage = "Une erreur est survenue lors de la correction des numeros de \(contact.givenName) \(contact.familyName) ❌"
+					self.isAlertPresented = true
+				}
+			}
+		}
+	}
+	
+	func removeContact(_ contact: CNContact) {
+		DispatchQueue.main.async {
+			self.isLoading = true
+		}
+		
+		Task {
+			if removeOneContactUseCase.execute(forContact: contact) {
+				self.fetchAllData()
+				
+				DispatchQueue.main.async {
+					self.isLoading = false
+					self.alertMessage = "Le contact \(contact.givenName) \(contact.familyName) a été supprimé ✅"
+					self.isAlertPresented = true
+				}
+			} else {
+				DispatchQueue.main.async {
+					self.isLoading = false
+					self.alertMessage = "Une erreur est survenue lors de la suppression du contact \(contact.givenName) \(contact.familyName) ❌"
 					self.isAlertPresented = true
 				}
 			}
