@@ -58,7 +58,17 @@ struct HomeView: View {
 						
 						if isSelecting {
 							Image(systemName: isSelected ? "checkmark.circle.fill" : "checkmark.circle")
+								.resizable()
+								.scaledToFit()
+								.frame(width: 18, height: 18)
 								.foregroundColor(isSelected ? .appPrincipal : .appText)
+								.onTapGesture {
+									if isSelected {
+										vm.selectedContacts.remove(item)
+									} else {
+										vm.selectedContacts.insert(item)
+									}
+								}
 						}
 					}
 					.swipeActions(edge: .leading, allowsFullSwipe: false) {
@@ -191,8 +201,8 @@ struct HomeView: View {
 					vm.removeSelectedContact()
 					isSelecting = false
 				}
-				.buttonStyle(BorderedButtonStyle())
-				.tint(Color(UIColor.systemOrange))
+				.fontWeight(.bold)
+				.tint(Color.appRed)
 				.disabled(vm.selectedContacts.isEmpty)
 			}
 			ToolbarItem(placement: .bottomBar) {
