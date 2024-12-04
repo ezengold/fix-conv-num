@@ -86,7 +86,7 @@ struct InfosView: View {
 						.stroke(Color.appText.opacity(colorScheme == .dark ? 0.1 : 0.07), lineWidth: 1)
 				)
 				.clipped()
-				Text("Vous pouvez ignorer certains contacts en les glissant vers la droite. Ces derniers seront retirés de l'application mais pas de votre répertoire téléphonique. Ils ne seront par conséquent pas altérés.")
+				Text("Vous pouvez ignorer certains contacts en les glissant vers la droite. Ces derniers seront retirés de l'application mais pas de votre répertoire téléphonique. Ils ne seront pas altérés.")
 					.font(.system(size: 15, weight: .regular))
 					.lineSpacing(9)
 					.padding(.top, 10)
@@ -103,7 +103,7 @@ struct InfosView: View {
 					Text(" n'ont pas été migré ").foregroundColor(.red).font(.system(size: 15, weight: .bold)) +
 					Text(" ou que lors de la migration, ils ont été ") +
 					Text(" remplacés ").foregroundColor(.red).font(.system(size: 15, weight: .bold)) +
-					Text(" par le numéro étendu. Ils sont à l'origine des problèmes rencontrés dans l'application **WhatsApp** par exemple.")
+					Text(" par le nouveau format des numeros béninois. Ils sont à l'origine des problèmes rencontrés dans l'application **WhatsApp** par exemple.")
 				}
 				.font(.system(size: 15, weight: .regular))
 				.lineSpacing(9)
