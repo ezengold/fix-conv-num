@@ -139,6 +139,8 @@ struct HomeView: View {
 			}
 		}
 		.sheet(isPresented: $isPresentingInfos) {
+			vm.fetchAllData()
+		} content: {
 			InfosView()
 		}
 		.searchable(text: $vm.keywords, prompt: Text("Rechercher un nom ou prénom"))
@@ -216,7 +218,9 @@ struct HomeView: View {
 		}
 		.onAppear {
 			isPresentingInfos = !hasViewedInfos
-			vm.fetchAllData()
+			if hasViewedInfos {
+				vm.fetchAllData()
+			}
 		}
 	}
 }
