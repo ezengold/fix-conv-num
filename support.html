@@ -49,7 +49,8 @@
     .card-wrapper {
       width: 500px;
       padding: 30px;
-      background-color: rgb(var(--foreground), 0.08);
+      background-color: rgb(var(--foreground), 0.03);
+      border: 1px solid rgb(var(--foreground), 0.05);
       border-radius: 10px;
       display: flex;
       flex-direction: column;
@@ -64,6 +65,7 @@
       outline: none;
       border-radius: 5px;
       color: rgb(var(--foreground));
+      background-color: rgb(var(--background));
     }
 
     .submit-btn {
@@ -85,6 +87,10 @@
     }
 
     @media only screen and (max-width: 768px) {
+      .container {
+        padding: 30px;
+        justify-content: flex-end;
+      }
       .card-wrapper {
         width: 100%;
       }
