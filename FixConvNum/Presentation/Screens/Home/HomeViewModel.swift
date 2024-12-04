@@ -14,6 +14,8 @@ class HomeViewModel: ObservableObject {
 	
 	@Published var data = [CNContact]()
 	
+	@Published var selectedContacts = Set<CNContact>()
+	
 	var displayed: [CNContact] {
 		get {
 			getFilteredData()
@@ -152,21 +154,19 @@ class HomeViewModel: ObservableObject {
 			self.isLoading = true
 		}
 		
-		Task {
-			if await fixOneContactUseCase.execute(forContact: contact) {
-				self.fetchAllData()
-				
-				DispatchQueue.main.async {
-					self.isLoading = false
-					self.alertMessage = "Les numeros de \(contact.givenName) \(contact.familyName) ont été corrigés ✅"
-					self.isAlertPresented = true
-				}
-			} else {
-				DispatchQueue.main.async {
-					self.isLoading = false
-					self.alertMessage = "Une erreur est survenue lors de la correction des numeros de \(contact.givenName) \(contact.familyName) ❌"
-					self.isAlertPresented = true
-				}
+		if fixOneContactUseCase.execute(forContact: contact) {
+			self.fetchAllData()
+			
+			DispatchQueue.main.async {
+				self.isLoading = false
+				self.alertMessage = "Les numeros de \(contact.givenName) \(contact.familyName) ont été corrigés ✅"
+				self.isAlertPresented = true
+			}
+		} else {
+			DispatchQueue.main.async {
+				self.isLoading = false
+				self.alertMessage = "Une erreur est survenue lors de la correction des numeros de \(contact.givenName) \(contact.familyName) ❌"
+				self.isAlertPresented = true
 			}
 		}
 	}
@@ -176,22 +176,60 @@ class HomeViewModel: ObservableObject {
 			self.isLoading = true
 		}
 		
-		Task {
-			if removeOneContactUseCase.execute(forContact: contact) {
-				self.fetchAllData()
-				
-				DispatchQueue.main.async {
-					self.isLoading = false
-					self.alertMessage = "Le contact \(contact.givenName) \(contact.familyName) a été retiré ✅"
-					self.isAlertPresented = true
-				}
-			} else {
-				DispatchQueue.main.async {
-					self.isLoading = false
-					self.alertMessage = "Une erreur est survenue lors du retrait du contact \(contact.givenName) \(contact.familyName) ❌"
-					self.isAlertPresented = true
-				}
+		if removeOneContactUseCase.execute(forContact: contact) {
+			self.fetchAllData()
+			
+			DispatchQueue.main.async {
+				self.isLoading = false
+				self.alertMessage = "Le contact \(contact.givenName) \(contact.familyName) a été retiré ✅"
+				self.isAlertPresented = true
 			}
+		} else {
+			DispatchQueue.main.async {
+				self.isLoading = false
+				self.alertMessage = "Une erreur est survenue lors du retrait du contact \(contact.givenName) \(contact.familyName) ❌"
+				self.isAlertPresented = true
+			}
+		}
+	}
+	
+	func fixSelectedContact() {
+		guard !self.selectedContacts.isEmpty else { return }
+		
+		DispatchQueue.main.async {
+			self.isLoading = true
+		}
+		
+		for contact in self.selectedContacts {
+			_ = fixOneContactUseCase.execute(forContact: contact)
+		}
+
+		DispatchQueue.main.async {
+			self.isLoading = false
+			self.alertMessage = "Les contacts sélectionnés ont été corrigés ✅"
+			self.isAlertPresented = true
+			self.fetchAllData()
+			self.selectedContacts.removeAll()
+		}
+	}
+	
+	func removeSelectedContact() {
+		guard !self.selectedContacts.isEmpty else { return }
+		
+		DispatchQueue.main.async {
+			self.isLoading = true
+		}
+		
+		for contact in self.selectedContacts {
+			_ = removeOneContactUseCase.execute(forContact: contact)
+		}
+
+		DispatchQueue.main.async {
+			self.isLoading = false
+			self.alertMessage = "Les contacts sélectionnés ont été retirés de la liste ✅"
+			self.isAlertPresented = true
+			self.fetchAllData()
+			self.selectedContacts.removeAll()
 		}
 	}
 }

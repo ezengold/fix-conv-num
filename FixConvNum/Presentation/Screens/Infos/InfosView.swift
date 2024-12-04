@@ -141,7 +141,7 @@ struct InfosView: View {
 					VStack {
 						HStack {
 							Spacer()
-							Image(systemName: "person.crop.circle.fill.badge.plus")
+							Image(systemName: "ellipsis.circle")
 								.foregroundColor(.appPrincipal)
 						}
 						Text("Mes contacts")
@@ -164,6 +164,10 @@ struct InfosView: View {
 						.stroke(Color.appText.opacity(colorScheme == .dark ? 0.1 : 0.07), lineWidth: 1)
 				)
 				.clipped()
+				Text("Puis vous choisissez l'option des paramètres. Vous serez redirigés vers les paramètres de votre téléphone pour modifier les conditions d'accès au répertoire téléphonique.")
+					.font(.system(size: 15, weight: .regular))
+					.lineSpacing(9)
+					.padding(.top, 20)
 				
 				Text("By \(Text("[@ezengold](https://www.linkedin.com/in/ezengold/)").underline().foregroundColor(.appPrincipal))")
 					.font(.system(size: 15, weight: .regular))

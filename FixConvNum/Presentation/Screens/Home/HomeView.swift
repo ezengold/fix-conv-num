@@ -21,6 +21,8 @@ struct HomeView: View {
 	
 	@State var isPresentingInfos: Bool = false
 	
+	@State var isSelecting: Bool = false
+	
 	var body: some View {
 		VStack(spacing: 0) {
 			if vm.displayed.isEmpty {
@@ -37,88 +39,95 @@ struct HomeView: View {
 					Spacer()
 				}
 			} else {
-				List {
-					ForEach(Array(vm.displayed.enumerated()), id: \.0) { _, item in
+				List(vm.displayed, id: \.identifier) { item in
+					let isSelected = vm.selectedContacts.contains(item)
+					
+					ZStack(alignment: .topTrailing) {
 						ContactCard(contact: .constant(item))
-							.swipeActions(edge: .leading, allowsFullSwipe: false) {
-								Button("Ignorer", systemImage: "archivebox") {
-									isDeleting = true
-									tempContact = item
-								}
-								.tint(Color(UIColor.systemOrange))
-							}
-							.swipeActions(edge: .trailing) {
-								if item.hasIssue() {
-									Button("Corriger") {
-										vm.fixContact(item)
+							.frame(maxWidth: .infinity)
+							.containerShape(Rectangle())
+							.onTapGesture {
+								if isSelecting {
+									if isSelected {
+										vm.selectedContacts.remove(item)
+									} else {
+										vm.selectedContacts.insert(item)
 									}
-									.tint(Color.appPrincipal)
 								}
 							}
+						
+						if isSelecting {
+							Image(systemName: isSelected ? "checkmark.circle.fill" : "checkmark.circle")
+								.foregroundColor(isSelected ? .appPrincipal : .appText)
+						}
+					}
+					.swipeActions(edge: .leading, allowsFullSwipe: false) {
+						Button("Ignorer", systemImage: "archivebox") {
+							isDeleting = true
+							tempContact = item
+						}
+						.tint(Color(UIColor.systemOrange))
+					}
+					.swipeActions(edge: .trailing) {
+						if item.hasIssue() {
+							Button("Corriger") {
+								vm.fixContact(item)
+							}
+							.tint(Color.appPrincipal)
+						}
 					}
 				}
 				.listStyle(.plain)
 				.frame(maxHeight: .infinity)
 			}
 			
-			HStack(spacing: 10) {
-				if vm.isFetching {
-					Button { } label: {
-						Text("Chargement des contacts...")
-							.font(.system(size: 17, weight: .bold))
-					}
-					.frame(maxWidth: .infinity)
-					.frame(height: 50, alignment: .center)
-					.foregroundColor(.appText)
-					.background(
-						RoundedRectangle(cornerRadius: 10)
-							.fill(Color.appPrincipal.opacity(colorScheme == .dark ? 0.3 : 0.1))
-					)
-					.disabled(true)
-				} else {
-					Button {
-						vm.fixAllContacts()
-					} label: {
-						if vm.isLoading {
-							ProgressView()
-								.progressViewStyle(CircularProgressViewStyle(tint: .white))
-						} else {
-							Text(vm.issueExistsInList ? "Corriger vos contacts" : "Tous vos contacts sont corrects")
+			if !isSelecting {
+				HStack(spacing: 10) {
+					if vm.isFetching {
+						Button { } label: {
+							Text("Chargement des contacts...")
 								.font(.system(size: 17, weight: .bold))
 						}
+						.frame(maxWidth: .infinity)
+						.frame(height: 50, alignment: .center)
+						.foregroundColor(.appText)
+						.background(
+							RoundedRectangle(cornerRadius: 10)
+								.fill(Color.appPrincipal.opacity(colorScheme == .dark ? 0.3 : 0.1))
+						)
+						.disabled(true)
+					} else {
+						Button {
+							vm.fixAllContacts()
+						} label: {
+							if vm.isLoading {
+								ProgressView()
+									.progressViewStyle(CircularProgressViewStyle(tint: .white))
+							} else {
+								Text(vm.issueExistsInList ? "Corriger vos contacts" : "Tous vos contacts sont corrects")
+									.font(.system(size: 17, weight: .bold))
+							}
+						}
+						.frame(maxWidth: .infinity)
+						.frame(height: 50, alignment: .center)
+						.foregroundColor(vm.issueExistsInList ? Color.white : .appPrincipal)
+						.disabled(!vm.issueExistsInList)
+						.background(
+							RoundedRectangle(cornerRadius: 10)
+								.fill(Color.appPrincipal.opacity(vm.isLoading ? 0.3 : (vm.issueExistsInList ? 1 : 0.1)))
+						)
+						.overlay(
+							vm.issueExistsInList ?
+							nil
+							:
+								RoundedRectangle(cornerRadius: 10, style: .circular)
+								.stroke(Color.appPrincipal.opacity(0.5), lineWidth: 1)
+						)
 					}
-					.frame(maxWidth: .infinity)
-					.frame(height: 50, alignment: .center)
-					.foregroundColor(vm.issueExistsInList ? Color.white : .appPrincipal)
-					.disabled(!vm.issueExistsInList)
-					.background(
-						RoundedRectangle(cornerRadius: 10)
-							.fill(Color.appPrincipal.opacity(vm.isLoading ? 0.3 : (vm.issueExistsInList ? 1 : 0.1)))
-					)
-					.overlay(
-						vm.issueExistsInList ?
-						nil
-						:
-							RoundedRectangle(cornerRadius: 10, style: .circular)
-							.stroke(Color.appPrincipal.opacity(0.5), lineWidth: 1)
-					)
 				}
+				.padding(10)
 			}
-			.padding(10)
 		}
-		.navigationTitle("Mes contacts")
-		.navigationBarItems(trailing: HStack {
-			Button("Infos", systemImage: "info.circle", role: .none) {
-				isPresentingInfos.toggle()
-			}
-			Button("Settings", systemImage: "person.crop.circle.fill.badge.plus", role: .none) {
-				guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else { return }
-				
-				if UIApplication.shared.canOpenURL(settingsUrl) {
-					UIApplication.shared.open(settingsUrl)
-				}
-			}
-		})
 		.sheet(isPresented: $isPresentingInfos) {
 			InfosView()
 		}
@@ -140,9 +149,63 @@ struct HomeView: View {
 		} message: {
 			Text("Êtes-vous sûr de vouloir ignorer ce contact ? Cette action est irréversible !")
 		}
+		.navigationTitle("Mes contacts")
+		.navigationBarItems(trailing: HStack {
+			if !isSelecting {
+				Button("Infos", systemImage: "info.circle", role: .none) {
+					isPresentingInfos.toggle()
+				}
+				Menu {
+					Button("Sélectionner", systemImage: "checkmark.circle") {
+						withAnimation {
+							isSelecting.toggle()
+							vm.selectedContacts.removeAll()
+						}
+					}
+					Button("Paramètres", systemImage: "person.crop.circle.fill.badge.plus") {
+						guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else { return }
+						
+						if UIApplication.shared.canOpenURL(settingsUrl) {
+							UIApplication.shared.open(settingsUrl)
+						}
+					}
+				} label: {
+					Image(systemName: "ellipsis.circle")
+				}
+			}
+		})
+		.toolbar(isSelecting ? .visible : .hidden, for: .bottomBar)
+		.toolbar {
+			if isSelecting {
+				ToolbarItem(placement: .cancellationAction) {
+					Button("Annuler", role: .destructive) {
+						withAnimation {
+							vm.selectedContacts.removeAll()
+							isSelecting.toggle()
+						}
+					}
+				}
+			}
+			ToolbarItem(placement: .bottomBar) {
+				Button("Ignorer") {
+					vm.removeSelectedContact()
+					isSelecting = false
+				}
+				.buttonStyle(BorderedButtonStyle())
+				.tint(Color(UIColor.systemOrange))
+				.disabled(vm.selectedContacts.isEmpty)
+			}
+			ToolbarItem(placement: .bottomBar) {
+				Button("Corriger") {
+					vm.fixSelectedContact()
+					isSelecting = false
+				}
+				.buttonStyle(BorderedButtonStyle())
+				.disabled(vm.selectedContacts.isEmpty)
+			}
+		}
 		.onAppear {
 			isPresentingInfos = !hasViewedInfos
-			
 			vm.fetchAllData()
 		}
 	}

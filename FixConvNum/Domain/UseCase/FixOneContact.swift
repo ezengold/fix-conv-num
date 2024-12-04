@@ -9,14 +9,14 @@ import Contacts
 
 protocol FixOneContact {
 	
-	func execute(forContact contact: CNContact) async -> Bool
+	func execute(forContact contact: CNContact) -> Bool
 }
 
 struct FixOneContactUseCase: FixOneContact {
 	
 	var store: CNContactStore
 	
-	func execute(forContact contact: CNContact) async -> Bool {
+	func execute(forContact contact: CNContact) -> Bool {
 		// handle migrations to -> 01[oldnumber]
 		let updatedContact = Helpers.getMigratedContactIfNecessary(from: contact)
 		
