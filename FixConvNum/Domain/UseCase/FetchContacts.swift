@@ -34,7 +34,7 @@ struct FetchContactsUseCase: FetchContacts {
 				}
 			}
 			
-			return contacts
+			return contacts.sorted(by: { (c1, c2) in c1.hasIssue() ? true : false })
 		} catch {
 			return []
 		}
